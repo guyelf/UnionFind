@@ -3,7 +3,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "AVLTree.h"
 #include "serverList.h"
 
 //key = serverId
@@ -11,6 +10,7 @@
 
 //helper enum to resize function
 enum resize_enum {DOWN,UP };
+
 
 
 template<class D>
@@ -24,9 +24,10 @@ class HashTable
 	int hashed_index(unsigned int index, int newSize = 0);
 	
 public:
-	explicit HashTable (unsigned int size);
+	explicit HashTable (unsigned int size=1);
 	void insert(D data, int server_id);//inserts a cpy not reference 
 	D& find(int server_id);
+	bool exists(int server_id);//todo: implement
 	void remove(int server_id);
 	~HashTable();
 	

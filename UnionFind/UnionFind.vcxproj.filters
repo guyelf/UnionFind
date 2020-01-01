@@ -27,6 +27,9 @@
     <ClCompile Include="serverList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UnionFind.h">
@@ -38,16 +41,16 @@
     <ClInclude Include="HashTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\Studies\Semster_3\מבני נתונים\HW\Wet1\Final version\AVLTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\Studies\Semster_3\מבני נתונים\HW\Wet1\Final version\TreeNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="serverList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVLTreeRankNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVLTreeRank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wet1Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

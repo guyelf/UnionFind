@@ -116,18 +116,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="serverList.cpp" />
     <ClCompile Include="UnionFind.cpp" />
     <ClCompile Include="unionFind_Node.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Desktop\Studies\Semster_3\מבני נתונים\HW\Wet1\Final version\AVLTree.h" />
-    <ClInclude Include="..\..\..\..\Desktop\Studies\Semster_3\מבני נתונים\HW\Wet1\Final version\TreeNode.h" />
-    <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="AVLTreeRank.h" />
+    <ClInclude Include="AVLTreeRankNode.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="serverList.h" />
     <ClInclude Include="UnionFind.h" />
     <ClInclude Include="unionFind_Node.h" />
+    <ClInclude Include="wet1Exception.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
