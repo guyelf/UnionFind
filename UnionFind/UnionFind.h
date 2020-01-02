@@ -8,8 +8,8 @@
 struct HTData
 {
 public:
-	int group_id;
-	int param;
+	int group_id; //the dc root id
+	int param; //traffic server
 	HTData(int group_id, int param = 0) : group_id(group_id), param(param) {};
 };
 

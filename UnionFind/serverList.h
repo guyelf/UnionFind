@@ -11,12 +11,14 @@ template <class T>
 struct serverNode {
 private:
 	T* data;
+	int id;
 public:
 	serverNode* next;
 	serverNode* prev;
-	explicit serverNode(T* data):data(data), next(nullptr), prev(nullptr){};
-	explicit serverNode(const T* data) :data(data), next(nullptr), prev(nullptr) {};
-	 T* getData();
+    serverNode(T* data, int id):data(data), id(id), next(nullptr), prev(nullptr){};
+	//explicit serverNode(const T* data) :data(data), next(nullptr), prev(nullptr) {};
+	T* getData();
+	int getId() const;
 };
 
 
@@ -24,6 +26,12 @@ template <class T>
  T* serverNode<T>::getData()
 {
 	return this->data;
+}
+
+template <class T>
+int serverNode<T>::getId() const
+{
+	return this->id;
 }
 
 
@@ -145,7 +153,9 @@ void serverList<T>::removeNode(serverNode<T>* serverNode)
     if(serverNode->next){
         serverNode->next->prev = serverNode->prev;
     }
-    serverNode->prev = serverNode->next;
+	//TODO: NOTE! this change here!
+	//before: serverNode->prev = serverNode->next;
+    serverNode->prev->next = serverNode->next;
     serverNode->prev = nullptr;
     serverNode->next = nullptr;
     --(this->size);
