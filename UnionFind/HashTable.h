@@ -4,6 +4,7 @@
 #define HASHTABLE_H
 
 #include "serverList.h"
+#include "wet1Exception.h"
 
 //key = serverId
 //Data = server itself (= D)
@@ -110,9 +111,7 @@ template <class D >
 void HashTable<D>::insert(D data, int key)
 {
 	if(exists(key))
-	{
-		//throw Failure
-	}
+	    throw FailException();
 	++(this->num_elements);
 	this->factor = (num_elements) / static_cast<double>(size);
 	int ht_index = getHash(key);
@@ -120,7 +119,6 @@ void HashTable<D>::insert(D data, int key)
 	D* cpy_data = new D(data);
 	serverNode<D>* node = new serverNode<D>(cpy_data, key);
 	this->dynamic_arr[ht_index].insertLast(node);
-
 	if (this->factor >= 1)
 		resize(UP);
 }
@@ -129,9 +127,7 @@ template <class D>
 D& HashTable<D>::find(int key)
 {
 	if (!exists(key))
-	{
-		//todo: throw Failure
-	}
+		throw FailException();
 	int ht_index = getHash(key);
 
 	auto cur_server = this->dynamic_arr[ht_index].getHead();
@@ -152,28 +148,19 @@ bool HashTable<D>::exists(int key)
 	while (cur_element != nullptr && *(cur_element->getData()) != key)
 		cur_element = cur_element->next;
 
-	return cur_element? false : true;
+	return cur_element? true : false;
 }
 
 template <class D>
 void HashTable<D>::remove(int key)
 {
-
 	if (!exists(key))
-	{
-		//throw Failure
-	}
-
-
+	    throw FailException();
 	int id = getHash(key);
-
 	serverNode<D>* node = this->getNode(key);
-
 	this->dynamic_arr[id].removeNode(node);
 	delete node; //no removal in list-node
-
 	--(this->num_elements);
-
 	this->factor = num_elements / static_cast<double>(this->size);
 	if (this->factor <= 0.25 )
 		resize(DOWN);

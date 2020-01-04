@@ -115,8 +115,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="library2.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="serverList.cpp" />
     <ClCompile Include="UnionFind.cpp" />
     <ClCompile Include="unionFind_Node.cpp" />
@@ -124,7 +127,10 @@
   <ItemGroup>
     <ClInclude Include="AVLTreeRank.h" />
     <ClInclude Include="AVLTreeRankNode.h" />
+    <ClInclude Include="DataManager.h" />
     <ClInclude Include="HashTable.h" />
+    <ClInclude Include="library2.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="serverList.h" />
     <ClInclude Include="UnionFind.h" />
     <ClInclude Include="unionFind_Node.h" />

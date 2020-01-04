@@ -25,7 +25,9 @@ public:
     ~TreeNode() = default;
     // add maybe operators
     unsigned int getSubSize() const;
-
+    void setParam(int p){
+        this->param = p;
+    }
     //this values just return the data they hold, can't think of a way that a node as a root will calculate its decedents height properly.
     //can only be done when inserting a new node to the TREE (AVLTREE) and then scanning the tree upwards and re-assigning the values --> so I don't think there should be a method here that calculates this.
     unsigned int getHeight() const;
@@ -51,7 +53,7 @@ public:
     void setFather(TreeNode* node); // sets the father node of the son
     //updates the balance of the nodes in the tree //todo: change name to updateBalance once the code is compiled.
     void reBalance() {
-        int left = 0, right = 0;
+        int left =-1, right = -1;
         if (this->getLeftSon()) {
             left = (this->getLeftSon()->getHeight());
         }

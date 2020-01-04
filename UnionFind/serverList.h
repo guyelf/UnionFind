@@ -19,6 +19,9 @@ public:
 	//explicit serverNode(const T* data) :data(data), next(nullptr), prev(nullptr) {};
 	T* getData();
 	int getId() const;
+    ~serverNode(){
+        delete data;
+    }
 };
 
 
@@ -55,8 +58,14 @@ public:
     serverNode<T>* popHead();
 	//gets a ptr of a node in the list, removes it
 	void removeNode(serverNode<T>* serverNode);
-	//~serverList() the nodes of the servreList are being taking care of somewhere else - by the DM & DC 
-
+	~serverList(){
+	    serverNode<T>* tmp = this->head;
+	    while(tmp!= nullptr){
+	        delete tmp;
+	        this->popHead();
+	        tmp = this->head;
+	    }
+	}
 };
 
 template <class T>

@@ -9,7 +9,7 @@
 #include "AVLTreeRankNode.h"
 #include "wet1Exception.h"
 #include <tgmath.h>
-
+#include <assert.h>
 enum { L_balance = 2, R_balance = -2 };
 
 template <class K, class  D>
@@ -85,6 +85,12 @@ public:
         iterator = father_node;
         return iterator;
     };
+    TreeNode<K, D> * getRoot(){
+        return this->root;
+    }
+    void setRoot(TreeNode<K, D> * new_root){
+        this->root = new_root;
+    }
     TreeNode<K, D> *min(TreeNode<K, D> *node) {
         if (!node) return nullptr;
         TreeNode<K, D> *min = node;
@@ -243,7 +249,6 @@ public:
                 }
             }
             TreeNode<K, D>* fatherNode = next->getFather();
-
             updateHeight(fatherNode);
             padre = fatherNode;
             while(padre->getFather()){
@@ -252,22 +257,25 @@ public:
             }
             delete(next);
             while (fatherNode!= nullptr){
-                if(fatherNode!=root) break;
+                if(fatherNode==root) break; //thh
                 balanceNode(fatherNode);
                 fatherNode = fatherNode->getFather();
             }
             balanceNode(root);
+            while (root->getFather())
+                root = root->getFather();
             return;
         }
-        updateHeight(padre);
         while (padre!= nullptr){
-            if(padre!=root) break;
+            if(padre==root) break;
             updateHeight(padre);
             balanceNode(padre);
             padre = padre->getFather();
         }
+        updateHeight(root);
         balanceNode(root);
-
+        while (root->getFather())
+            root = root->getFather();
     }
     TreeNode<K, D>* removeNode_aux(K key, TreeNode<K, D>* node){
         if (!node) return nullptr;
@@ -289,6 +297,7 @@ public:
         K tmp_key = node1->getKey();
         D* tmp_data = node1->getData();
         int tmp_balance = node1->getBalance();
+        int tmp_param = node2->getParam();
         unsigned int tmp_sub = node1->getSubSize();
         unsigned int tmp_height = node1->height;
         node1->setData(node2->getData());
@@ -296,7 +305,8 @@ public:
         node1->setBalance(node2->getBalance());
         node1->height = node2->height;
         node1->sub_tree_size = node2->sub_tree_size;
-
+        node2->setParam(node1->getParam());
+        node1->setParam(tmp_param);
         node2->setData(tmp_data);
         node2->setKey(tmp_key);
         node2->setBalance(tmp_balance);
@@ -316,7 +326,10 @@ public:
             if (it->getLeftSon() && it->getLeftSon()->sub_tree_size==k-1) return it;
             if (it->getLeftSon() && it->getLeftSon()->sub_tree_size>k-1) it = it->getLeftSon();
             else {
-                k = k - it->getLeftSon()->sub_tree_size -1;
+                k-=1;
+                if(it->getLeftSon()) {
+                    k -= it->getLeftSon()->sub_tree_size;
+                }
                 it = it->getRightSon();
             }
         }
@@ -328,7 +341,7 @@ public:
         K k_node_key = findKNode(root->sub_tree_size-k+1)->getKey();
         TreeNode<K, D>* it = root;
         while (it->getKey()!= k_node_key){
-            if (k_node_key > it->getKey()){
+            if (it->getKey() < k_node_key){
                 if (it->getLeftSon())
                     K_sum -= it->getLeftSon()->sub_tree_param;
                 K_sum -= it->getParam();
@@ -373,6 +386,7 @@ TreeNode<K, D>* AVLTree<K, D>::rollLL(TreeNode<K, D>* node)
             fatherNode->setRightSon(node_left_son);
 
     }
+    node_left_son->setFather(fatherNode);
     updateHeight(node);
     updateHeight(node_left_son);
     return node_left_son;
@@ -442,7 +456,7 @@ void AVLTree<K, D>::clear(TreeNode<K, D>* sub_tree_root)
         return;
 
     //first removing the whole left part
-    clear(sub_tree_root->getLeftSon());
+     clear(sub_tree_root->getLeftSon());
 
     //then the right part
     clear(sub_tree_root->getRightSon());
@@ -511,6 +525,7 @@ static TreeNode<K,D>** arrayMerge(TreeNode<K,D>** array1,int size1, TreeNode<K,D
     for (int i=0 ; it1<size1 && it2<size2; i++){
         if (array1[it1]->getKey()<array2[it2]->getKey()){
             array[i] = array1[it1++];
+            //array1[it1++]= nullptr;
         } else {
             array[i] = array2[it2++];
         }
@@ -535,6 +550,7 @@ template <class K, class D>
 TreeNode<K, D>* buildEmptyCompleteTree(int height) {
     if (height<0) return nullptr;
     TreeNode<K,D>* empty_tree = new TreeNode<K,D>;
+    empty_tree->setFather(nullptr);
     empty_tree->setLeftSon(buildEmptyCompleteTree<K,D>(height-1));
     empty_tree->setRightSon(buildEmptyCompleteTree<K,D>(height-1));
     empty_tree->height = height;
@@ -542,10 +558,10 @@ TreeNode<K, D>* buildEmptyCompleteTree(int height) {
     return empty_tree;
 }
 
-int min(int a, int b){
+/*int minInt(int a, int b){
     if (a<b) return a;
     return b;
-}
+}*/
 
 
 
@@ -556,7 +572,7 @@ bool deleteLeaves(TreeNode<K,D>* tree, int remove){ //
         delete(tree);
         return true;
     }
-    int remove_right = min(remove,pow(2,tree->getRightSon()->getHeight()));
+    int remove_right = remove<pow(2, tree->getRightSon()->getHeight()) ? remove:pow(2, tree->getRightSon()->getHeight());
     if (deleteLeaves(tree->getRightSon(), remove_right)){
         tree->setRightSon(nullptr);
     }
@@ -585,17 +601,16 @@ TreeNode<K, D>* AVLTree<K, D>::buildEmptyTree(int size) {
 
 template <class K, class D>
 void AVLTree<K, D>::mergeTrees(AVLTree *tree2) {
+    if (tree2->getRoot() == nullptr) return;
     if (this->root == nullptr) {
-        this->root=tree2->root;
-        tree2->root = nullptr;
-        return;
+        this->root=tree2->getRoot();
+        tree2->setRoot(nullptr);
     }
-    if (tree2->root == nullptr) return;
     TreeNode<K,D>** array1 = this->arrayInOrder();
     int arr1_size = root->sub_tree_size;
     TreeNode<K,D>** array2 = tree2->arrayInOrder();
-    int arr2_size = tree2->root->sub_tree_size;
-    tree2->root= nullptr;
+    int arr2_size = tree2->getRoot()->sub_tree_size;
+    tree2->setRoot(nullptr);
     TreeNode<K,D>** array = arrayMerge(array1, arr1_size, array2, arr2_size);
     TreeNode<K,D>* new_tree = buildEmptyTree(arr1_size+arr2_size);
     //delete this->root;
@@ -604,13 +619,16 @@ void AVLTree<K, D>::mergeTrees(AVLTree *tree2) {
     int i;
     for (i=0 ; i<arr1_size+arr2_size-1 ; i++){
         this->iterator->assingedNode(array[i]);
+        delete array[i];
         this->getNextNode();
     }
     this->iterator->assingedNode(array[i]);
+    delete array[i];
     updateTreeOn(this->root);
-    free(array1);
-    free(array2);
-    free(array);
+    this->root->setFather(nullptr);
+    delete array1;
+    delete array2;
+    delete array;
 
 }
 
